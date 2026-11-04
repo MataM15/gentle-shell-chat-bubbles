@@ -7,6 +7,10 @@ the terminal wallpaper stays visible because nothing paints a background.
 
 Early-stage community preview. No dependencies beyond Pi itself.
 
+![Speech and thought bubbles on the sakura-dusk theme](docs/bubbles.png)
+
+![Compact tool cards](docs/tool-cards.png)
+
 ## What is inside
 
 | Path | What it does |
@@ -38,6 +42,7 @@ Then pick the theme with `/theme sakura-dusk` inside Pi. Restart Pi (or
 
 - `PI_BUBBLE_LABEL`: the name shown on the assistant bubble. Defaults to
   `Assistant`; set it to whatever you call your agent.
+- `PI_BUBBLE_USER_LABEL`: the name on your own bubble. Defaults to `You`.
 - `/bubbles`: toggles the bubble renderer at runtime.
 
 ## Test
@@ -49,6 +54,12 @@ byte. They need a Pi install under `~/.pi/agent/npm/node_modules` (or
 ```bash
 pnpm test
 ```
+
+## Screenshots
+
+`node --experimental-transform-types scripts/screenshots.mjs` re-renders the
+images in `docs/` from the extensions and the theme, using a Chromium binary
+(Playwright's headless shell by default, or `CHROMIUM`).
 
 ## Compatibility
 

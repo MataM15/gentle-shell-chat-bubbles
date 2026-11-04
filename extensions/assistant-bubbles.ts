@@ -10,7 +10,7 @@
 // go compact: no margin, 1-column padding, no blank rows inside the border and a
 // single-circle thought tail, so every row and column goes to the text.
 // The user's own messages get the mirrored speech bubble: right-aligned, labelled
-// "Vos", drawn in the theme's accent color, with the tail growing out of the
+// "You" (PI_BUBBLE_USER_LABEL), drawn in the theme's accent color, with the tail growing out of the
 // bottom-right.
 // No background is painted, so the terminal wallpaper stays visible. `/bubbles`
 // toggles everything for the session.
@@ -93,6 +93,8 @@ const MARGIN = 2;
 const MIN_BOX = 10;
 // Bubble label: set PI_BUBBLE_LABEL (for example "J.A.R.V.I.S.") to rename it.
 const ASSISTANT_LABEL = process.env.PI_BUBBLE_LABEL?.trim() || "Assistant";
+// User bubble label: set PI_BUBBLE_USER_LABEL to rename it.
+const USER_LABEL = process.env.PI_BUBBLE_USER_LABEL?.trim() || "You";
 const BOLD = (text: string) => `\x1b[1m${text}\x1b[22m`;
 // [left margin (also kept free on the right), inner horizontal padding], tried in order.
 const SPEECH_STEPS: Array<[number, number]> = [[MARGIN, 2], [0, 2], [0, 1], [0, 0]];
@@ -416,7 +418,7 @@ function userBubble(self: any, width: number): string[] | undefined {
 			const fill = " ".repeat(Math.max(0, contentWidth - visibleWidth(fitted)));
 			return `${lead}${side}${" ".repeat(gapL)}${fitted}${RESET}${fill}${" ".repeat(padding)}${side}`;
 		});
-		const top = `${lead}${paintAccent(`╭${"─".repeat(boxWidth - 8)} `)}${BOLD(paintAccent("Vos"))}${paintAccent(" ─╮")}`;
+		const top = `${lead}${paintAccent(`╭${"─".repeat(boxWidth - 5 - visibleWidth(USER_LABEL))} `)}${BOLD(paintAccent(USER_LABEL))}${paintAccent(" ─╮")}`;
 		const bottom = `${lead}${paintAccent(`╰${"─".repeat(boxWidth - 8)}╮ ╭───╯`)}`;
 		const tail = `${lead}${" ".repeat(boxWidth - 6)}${paintAccent("╲│")}`;
 		const out = phone ? [top, ...rows, bottom, tail] : [top, blank, ...rows, blank, bottom, tail];

@@ -9,6 +9,7 @@ import { join } from "node:path";
 
 // The fixtures were drawn with this label; keep it so the expected rows stay literal.
 process.env.PI_BUBBLE_LABEL = "J.A.R.V.I.S.";
+process.env.PI_BUBBLE_USER_LABEL = "Vos";
 const nodeModules = process.env.PI_NODE_MODULES ?? join(homedir(), ".pi/agent/npm/node_modules");
 const skip = existsSync(join(nodeModules, "@earendil-works/pi-coding-agent")) ? false : "Pi install not found";
 
