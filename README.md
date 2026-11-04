@@ -11,6 +11,8 @@ Early-stage community preview. No dependencies beyond Pi itself.
 
 ![Compact tool cards](docs/tool-cards.png)
 
+![Todo, subagent, memory and codemode cards](docs/other-cards.png)
+
 ## What is inside
 
 | Path | What it does |

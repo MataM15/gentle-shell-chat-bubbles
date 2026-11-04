@@ -60,6 +60,31 @@ function palette256(n) {
 	const i = n - 16, step = (k) => (k === 0 ? 0 : 55 + k * 40);
 	return `rgb(${step(Math.floor(i / 36))},${step(Math.floor(i / 6) % 6)},${step(i % 6)})`;
 }
+function otherCards() {
+	const shared = load("compact-tool-cards");
+	const other = load("compact-other-tool-cards", { dependencies: { CardLine: shared.CardLine, RoundedFrame: shared.RoundedFrame, MarginBlock: shared.MarginBlock, TOOLS: shared.TOOLS ?? ["bash", "read", "grep", "find", "ls", "edit", "write"], toneOf: shared.toneOf, isStaticExport: shared.isStaticExport } });
+	const code = load("compact-codemode-card", { dependencies: { RoundedFrame: shared.RoundedFrame, toneOf: shared.toneOf } });
+	const component = (text) => ({ render: () => [text], invalidate() {} });
+	const ctx = (args, isError = false) => ({ state: {}, args, isError, expanded: false, executionStarted: true, invalidate: () => true, cwd: root });
+	const run = (renderers, args, result, isError = false) => {
+		const c = ctx(args, isError);
+		const call = renderers.renderCall(args, theme, c);
+		renderers.renderResult(result, { expanded: false, isPartial: false }, theme, c);
+		return call.render(WIDTH);
+	};
+	const text = (t) => ({ content: [{ type: "text", text: t }], details: {} });
+	const todo = other.wrapOtherRenderers("todo", { renderShell: "self", renderCall: () => component("todo · update"), renderResult: () => component("3 done · 1 in progress · 2 pending") });
+	const subagent = other.wrapOtherRenderers("subagent_run", { renderCall: () => component("subagent_run · gentle-ai-explore"), renderResult: () => component("map footer data sources: 4 files, 2 helpers") });
+	const memory = other.wrapOtherRenderers("mem_search", { renderCall: () => component("mem_search · \"bubble label\""), renderResult: () => component("Found 3 memories.") });
+	const codemode = code.wrapCodemodeRenderers({ renderCall: () => component("codemode"), renderResult: () => component("ok") });
+	return [
+		...run(todo, { action: "update" }, text("3 done · 1 in progress · 2 pending")),
+		...run(subagent, { agent: "gentle-ai-explore" }, text("map footer data sources: 4 files, 2 helpers")),
+		...run(memory, { query: "bubble label" }, text("Found 3 memories.")),
+		...run(codemode, { code: "await tools.read(...)" }, { content: [{ type: "text", text: "Wall time 10.2 seconds" }], details: { calls: [{ name: "read", status: "ok" }, { name: "bash", status: "ok" }, { name: "todo", status: "ok" }] } }),
+	];
+}
+
 const esc = (s) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 function ansiToHtml(lines) {
 	return lines
@@ -111,7 +136,7 @@ function chromium() {
 	return dir && resolve(base, dir, "chrome-headless-shell-linux64/chrome-headless-shell");
 }
 
-for (const [name, lines] of [["bubbles", bubbles()], ["tool-cards", cards()]]) {
+for (const [name, lines] of [["bubbles", bubbles()], ["tool-cards", cards()], ["other-cards", otherCards()]]) {
 	const html = resolve(out, `${name}.html`);
 	writeFileSync(html, page(lines));
 	const bin = chromium();
