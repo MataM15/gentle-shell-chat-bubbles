@@ -1,0 +1,12 @@
+{
+  "name": "gentle-shell-chat-bubbles",
+  "version": "0.1.0",
+  "description": "Chat-style UI for the Pi coding agent and Gentle Shell: speech and thought bubbles, compact tool cards, and the sakura-dusk theme.",
+  "license": "MIT",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "test": "node --experimental-transform-types --test tests/*.test.mjs"
+  },
+  "packageManager": "pnpm@10.0.0"
+}
